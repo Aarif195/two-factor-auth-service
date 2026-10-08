@@ -13,3 +13,31 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum TwoFactorType {
+  NONE
+  TOTP
+  EMAIL
+  SMS
+}
+
+model User {
+  id                      String        @id @default(uuid())
+  email                   String        @unique
+  passwordHash            String
+  phoneNumber             String?       @unique
+  
+  // 2FA Settings
+  isTwoFactorEnabled      Boolean       @default(false)
+  twoFactorType           TwoFactorType @default(NONE)
+  twoFactorSecret         String?       // Encrypted TOTP secret
+  
+  // Backup / Recovery
+  backupCodes             Json?         // Hashed backup codes array
+  
+  // OTP Verification Metadata
+  otpCode                 String?
+  otpExpiresAt            DateTime?
+  
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+}
