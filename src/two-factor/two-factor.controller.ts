@@ -35,7 +35,7 @@ export class TwoFactorController {
     return this.backupCodesService.generateBackupCodes(userId);
   }
 
-  @Post('backup-codes/verify')
+ @Post('backup-codes/verify')
   async verifyBackupCode(@Body('userId') userId: string, @Body('code') code: string) {
     await this.backupCodesService.verifyAndConsumeBackupCode(userId, code);
     return { message: 'Backup recovery code verified and consumed successfully' };
