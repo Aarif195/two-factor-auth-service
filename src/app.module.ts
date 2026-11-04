@@ -6,6 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { TwoFactorModule } from './two-factor/two-factor.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -13,8 +14,16 @@ import configuration from './config/configuration';
       isGlobal: true,
       load: [configuration],
     }),
+    ThrottlerModule.forRoot(
+      [
+        {
+          ttl: 60,
+          limit: 10
+        }
+      ]
+    ),
     AuthModule, PrismaModule, TwoFactorModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
